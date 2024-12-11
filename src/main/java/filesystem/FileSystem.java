@@ -177,10 +177,11 @@ public class FileSystem {
     public String read(int fileDescriptor) throws IOException {
         System.out.println("Now will be Attempting to read file with descriptor: " + fileDescriptor);
 
+        #ForValidatingFileDescriptor
         if (fileDescriptor < 0 || fileDescriptor >= Disk.NUM_INODES) {
             throw new IOException("Invalid file descriptor");
         }
-
+        #RetrievingINODE #checks
         INode inode = diskDevice.readInode(fileDescriptor);
         if (inode == null || inode.getFileName() == null) {
             throw new IOException("FileSystem::read: File not found");
@@ -190,14 +191,17 @@ public class FileSystem {
         StringBuilder data = new StringBuilder();
         System.out.println("Reading file of size " + fileSize + " bytes...");
 
+            #Throughdatablocks
         for (int i = 0; i < INode.NUM_BLOCK_POINTERS; i++) {
             int blockPointer = inode.getBlockPointer(i);
             if (blockPointer == -1) break;
 
+            #ReadingaDataBlock
             byte[] blockData = diskDevice.readDataBlock(blockPointer);
-            int bytesToRead = Math.min(fileSize - (i * Disk.BLOCK_SIZE), Disk.BLOCK_SIZE);
-            data.append(new String(blockData, 0, bytesToRead));
-
+            int bytesToRead = Math.min(fileSize - (i * Disk.BLOCK_SIZE), Disk.BLOCK_SIZE); #Readingsize
+            data.append(new String(blockData, 0, bytesToRead)); #BlocktoString
+                
+            #LogBlockRead
             System.out.printf("Read block %d: %d bytes read\n", blockPointer, bytesToRead);
         }
 
