@@ -30,7 +30,7 @@ class FileSystemTest {
         fileSystem.delete("testFile");
         System.out.println("File deleted successfully.");
         Exception exception = assertThrows(IOException.class, () -> fileSystem.open("testFile"));
-        assertTrue(exception.getMessage().contains("FileSystem::open: The testFile does not exist"));
+        assertTrue(exception.getMessage().contains("FileSystem::open: File not found"));
     }
 
     @Test

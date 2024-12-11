@@ -3,7 +3,7 @@ package filesystem;
 import java.io.IOException;
 
 public class Main {
-    public static final int NUM_LINES = 100;
+    public static final int NUM_LINES = 25;
     public static final String testData = "This is some text ";
 
     public static void main(String[] args) {

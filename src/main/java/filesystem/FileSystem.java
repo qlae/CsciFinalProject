@@ -87,6 +87,10 @@ public class FileSystem {
         for (int i = 0; i < Disk.NUM_INODES; i++) {
             tmpINode = diskDevice.readInode(i);
 
+            if (tmpINode == null) {
+                continue;
+            }
+
             String fName = tmpINode.getFileName();
 
             if (fName != null && fName.trim().compareTo(fileName.trim()) == 0) {
@@ -107,10 +111,11 @@ public class FileSystem {
             this.iNodeForFile = null;
             this.fileDescriptor = -1;
             this.iNodeNumber = -1;
+        } else {
+            throw new IOException("FileSystem::delete: " + fileName + " does not exist");
         }
-
-
     }
+
     /***
      * Makes the file available for reading/writing
      *
@@ -228,10 +233,16 @@ public class FileSystem {
 
         int offset = 0;
         for (int i = 0; i < totalBlocks; i++) {
-
             // Disk for this stripe
             int diskIndex = i % numDisks;
+            if (diskIndex < 0 || diskIndex >= numDisks) {
+                throw new IOException("Invalid disk index: " + diskIndex);
+            }
+
             int blockPointer = allocatedBlocks[i];
+            if (blockPointer < 0 || blockPointer >= Disk.NUM_BLOCKS) {
+                throw new IOException("Invalid block pointer: " + blockPointer);
+            }
 
             byte[] blockData = new byte[Disk.BLOCK_SIZE];
             int length = Math.min(dataBytes.length - offset, Disk.BLOCK_SIZE);
@@ -251,6 +262,8 @@ public class FileSystem {
 
         System.out.println("Finished writing data to file descriptor " + fileDescriptor + ".");
     }
+
+
 
     /**
      * The main piece of the Pie
