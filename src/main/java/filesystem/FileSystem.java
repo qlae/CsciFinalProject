@@ -11,10 +11,13 @@ public class FileSystem {
     public INode iNodeForFile;
     public int numDisks;
 
+        //Constructor to initialize the file system with the specified number of disks
+        //Set up the RAID 0 disks
+        //Format both the RAID disks and the main disk device.
     public FileSystem(int numDisks) throws IOException {
         this.numDisks = numDisks;
 
-        // Initialize the disks array for RAID 0
+       // Initialize the disks array for RAID 0
         this.disks = new Disk[numDisks];
         for (int i = 0; i < numDisks; i++) {
             disks[i] = new Disk();
