@@ -17,7 +17,7 @@ public class FileSystem {
     public FileSystem(int numDisks) throws IOException {
         this.numDisks = numDisks;
 
-       // Initialize the disks array for RAID 0
+       // Initialize the disks array for RAD 0
         this.disks = new Disk[numDisks];
         for (int i = 0; i < numDisks; i++) {
             disks[i] = new Disk();
